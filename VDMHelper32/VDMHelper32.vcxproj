@@ -152,6 +152,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VDMHelper.h" />
+    <ClInclude Include="VDMHelperAPI.h" />
     <ClInclude Include="VirtualDesktops.h" />
   </ItemGroup>
   <ItemGroup>

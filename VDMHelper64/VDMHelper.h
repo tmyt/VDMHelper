@@ -1,12 +1,9 @@
 #pragma once
 
-#include <tchar.h>
-
 // Refer: http://www.cyberforum.ru/blogs/105416/blog3671.html
 #include "VirtualDesktops.h"
 
-// Message Identifier for MoveWindowToDesktop proxy
-#define RequestMoveWindowToDesktop _T("VDM.Helper.RequestMoveWindowToDesktop")
+#include "VDMHelperAPI.h"
 
 namespace VDM
 {

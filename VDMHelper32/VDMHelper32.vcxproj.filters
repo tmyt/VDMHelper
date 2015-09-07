@@ -30,6 +30,9 @@
     <ClInclude Include="VDMHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="VDMHelperAPI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

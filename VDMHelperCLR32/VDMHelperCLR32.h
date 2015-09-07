@@ -2,12 +2,32 @@
 
 #pragma once
 
+#include "../VDMHelper32/VDMHelperAPI.h"
+
+
 using namespace System;
+using namespace VDMHelperCLR::Common;
 
-namespace VDMHelperCLR32 {
+namespace VDMHelperCLR {
 
-	public ref class Class1
+	public ref class VdmHelper : public IVdmHelper
 	{
-		// TODO: Add your methods for this class here.
+	public:
+		VdmHelper();
+		~VdmHelper();
+
+		virtual bool Init();
+		virtual bool DeInit();
+		virtual void MoveWindowToDesktop(IntPtr topLevelWindow, Guid desktopId);
+
+	private:
+		UINT RequestMoveWindowToDesktopMessage;
+
+		HMODULE hvdm;
+		decltype(::VDMHookProc)* VDMHookProc;
+		decltype(::VDMAllocGuid)* VDMAllocGuid;
+		decltype(::VDMReleaseGuid)* VDMReleaseGuid;
+
+		HHOOK hHook;
 	};
 }

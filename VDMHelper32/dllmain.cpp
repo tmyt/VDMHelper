@@ -2,6 +2,7 @@
 #include "stdafx.h"
 
 #include "VDMHelper.h"
+#include "VDMHelperAPI.h"
 
 VDM::Helper g_helper;
 
