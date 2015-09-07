@@ -47,12 +47,6 @@ namespace VDMHelperCLR
 
 	void VdmHelper::MoveWindowToDesktop(IntPtr topLevelWindow, Guid desktopId)
 	{
-		BOOL isRunningOnX64 = FALSE;
-		::IsWow64Process(GetCurrentProcess(), &isRunningOnX64);
-		if (isRunningOnX64)
-		{
-			throw gcnew System::InvalidOperationException("You need call via 64bit dll");
-		}
 		// convert System.Guid to GUID
 		auto bytes = desktopId.ToByteArray();
 		pin_ptr<unsigned char> pbytes = &bytes[0];
