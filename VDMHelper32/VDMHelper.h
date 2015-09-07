@@ -18,8 +18,11 @@ namespace VDM
 		bool process(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		bool tryInit();
+
 		UINT mMoveWindowToDesktopMessage;
 
 		IVirtualDesktopManager* mpVdm;
+		bool mInitializationFailed;
 	};
 }
