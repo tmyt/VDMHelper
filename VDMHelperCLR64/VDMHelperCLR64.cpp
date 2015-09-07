@@ -39,6 +39,9 @@ namespace VDMHelperCLR
 		if (!hHook)return false;
 		UnhookWindowsHookEx(hHook);
 		hHook = 0;
+		// stop 32bit helper process
+		auto hwnd = ::FindWindow(_T("VDM.InjectDLL32.Class"), nullptr);
+		SendMessage(hwnd, WM_CLOSE, 0, 0);
 		return true;
 	}
 
