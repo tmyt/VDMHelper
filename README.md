@@ -28,3 +28,8 @@ Step4. Stop hook when app closing.
 ```cs
 this.helper.Dispose();
 ```
+
+note
+----
+
+- If you use .NET 4.5 or higher, you should turn off `Prefer 32bit` flag on Build property.
