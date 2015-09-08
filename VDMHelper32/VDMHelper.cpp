@@ -5,6 +5,8 @@
 
 #include "VDMHelper.h"
 
+#include <thread>
+
 namespace VDM
 {
 	bool Helper::init()
@@ -15,33 +17,39 @@ namespace VDM
 
 	bool Helper::deinit()
 	{
-		if (mpVdm)
-		{
-			mpVdm->Release();
-			mpVdm = nullptr;
-		}
-		CoUninitialize();
 		return true;
 	}
 
-	bool Helper::tryInit()
+	IVirtualDesktopManager* Helper::getVdm()
 	{
+		// initialize
 		CoInitialize(nullptr);
 		CComPtr<IServiceProvider> pServiceProvider;
 		auto hr = CoCreateInstance(CLSID_ImmersiveShell, nullptr, CLSCTX_LOCAL_SERVER, IID_PPV_ARGS(&pServiceProvider));
-		if (FAILED(hr)) return (mInitializationFailed = true), false;
-		hr = pServiceProvider->QueryService(__uuidof(IVirtualDesktopManager), &mpVdm);
-		if (FAILED(hr)) return (mInitializationFailed = true), false;
-		return true;
+		if (FAILED(hr)) return nullptr;
+		IVirtualDesktopManager* pVdm;
+		hr = pServiceProvider->QueryService(__uuidof(IVirtualDesktopManager), &pVdm);
+		if (FAILED(hr)) return nullptr;
+		return pVdm;
 	}
-
 
 	bool Helper::process(HWND hwnd, UINT msg, ::WPARAM wParam, ::LPARAM lParam)
 	{
 		if (msg != mMoveWindowToDesktopMessage) return false;
-		if (mInitializationFailed) return false;
-		if (!mpVdm && (!mInitializationFailed || !tryInit())) return false;
-		mpVdm->MoveWindowToDesktop(hwnd, *reinterpret_cast<GUID*>(lParam));
+		GUID* pguid = new GUID();
+		memcpy(pguid, reinterpret_cast<void*>(lParam), sizeof(GUID));
+		std::thread([&](GUID* g)
+		{
+			CoInitialize(nullptr);
+			auto pVdm = getVdm();
+			if (pVdm)
+			{
+				pVdm->MoveWindowToDesktop(hwnd, *g);
+				pVdm->Release();
+			}
+			CoUninitialize();
+			delete g;
+		}, pguid).detach();
 		return true;
 	}
 }

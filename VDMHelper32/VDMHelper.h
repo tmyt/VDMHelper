@@ -10,7 +10,7 @@ namespace VDM
 	class Helper
 	{
 	public:
-		Helper() : mMoveWindowToDesktopMessage(0), mpVdm(0) {}
+		Helper() : mMoveWindowToDesktopMessage(0) {}
 
 		bool init();
 		bool deinit();
@@ -18,11 +18,8 @@ namespace VDM
 		bool process(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		bool tryInit();
+		IVirtualDesktopManager* Helper::getVdm();
 
 		UINT mMoveWindowToDesktopMessage;
-
-		IVirtualDesktopManager* mpVdm;
-		bool mInitializationFailed;
 	};
 }
