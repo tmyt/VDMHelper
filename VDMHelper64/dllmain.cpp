@@ -40,7 +40,7 @@ LPVOID CALLBACK VDMAllocGuid(HWND hwnd, const GUID* from)
 {
 	DWORD pid;
 	GetWindowThreadProcessId(hwnd, &pid);
-	auto hProcess = OpenProcess(PROCESS_VM_OPERATION, FALSE, pid);
+	auto hProcess = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE, FALSE, pid);
 	auto remote = VirtualAllocEx(hProcess, nullptr, sizeof(GUID), MEM_COMMIT, PAGE_READWRITE);
 	WriteProcessMemory(hProcess, remote, from, sizeof(GUID), nullptr);
 	CloseHandle(hProcess);
