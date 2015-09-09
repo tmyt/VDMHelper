@@ -29,6 +29,7 @@ namespace VDMHelperCLR
 	{
 		if (!hvdm) throw gcnew System::InvalidOperationException("Initialization failed");
 		hHook = SetWindowsHookEx(WH_CALLWNDPROCRET, VDMHookProc, hvdm, 0);
+		PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
 		return hHook != 0;
 	}
 
@@ -36,6 +37,7 @@ namespace VDMHelperCLR
 	{
 		if (!hHook)return false;
 		UnhookWindowsHookEx(hHook);
+		PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
 		hHook = 0;
 		return true;
 	}

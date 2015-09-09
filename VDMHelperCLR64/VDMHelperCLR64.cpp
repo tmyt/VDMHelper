@@ -29,6 +29,7 @@ namespace VDMHelperCLR
 	{
 		if (!hvdm) throw gcnew System::InvalidOperationException("Initialization failed");
 		hHook = SetWindowsHookEx(WH_CALLWNDPROCRET, VDMHookProc, hvdm, 0);
+		PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
 		// start 32bit helper process
 		::ShellExecute(nullptr, nullptr, _T("InjectDll32.exe"), nullptr, nullptr, 0);
 		return hHook != 0;
@@ -38,6 +39,7 @@ namespace VDMHelperCLR
 	{
 		if (!hHook)return false;
 		UnhookWindowsHookEx(hHook);
+		PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
 		hHook = 0;
 		// stop 32bit helper process
 		auto hwnd = ::FindWindow(_T("VDM.InjectDLL32.Class"), nullptr);

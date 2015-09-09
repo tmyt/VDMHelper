@@ -127,12 +127,14 @@ bool Init()
 	hVdm = LoadLibrary(HELPER_LIBRARY);
 	auto proc = reinterpret_cast<decltype(::VDMHookProc)*>(::GetProcAddress(hVdm, "VDMHookProc"));
 	hHook = SetWindowsHookEx(WH_CALLWNDPROCRET, proc, hVdm, 0);
+	PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
 	return true;
 }
 
 bool DeInit()
 {
 	UnhookWindowsHookEx(hHook);
+	PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
 	FreeLibrary(hVdm);
 	return true;
 }
