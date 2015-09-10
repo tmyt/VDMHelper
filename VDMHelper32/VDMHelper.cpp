@@ -41,9 +41,17 @@ namespace VDM
 		return pVdm;
 	}
 
+	bool Helper::isConsoleWindowClass(HWND hwnd)
+	{
+		TCHAR szClassName[32] = { 0 };
+		GetClassName(hwnd, szClassName, 31);
+		return _tcscmp(szClassName, _T("ConsoleWindowClass")) == 0;
+	}
+
 	bool Helper::process(HWND hwnd, UINT msg, ::WPARAM wParam, ::LPARAM lParam)
 	{
 		if (msg != mMoveWindowToDesktopMessage) return false;
+		if (isConsoleWindowClass(hwnd)) return false; // ignore console window
 		GUID* pguid = reinterpret_cast<GUID*>(lParam);
 		std::lock_guard<std::mutex> lock(mVdmLock); // scoped lock
 		if (mInitializationFailed) return false;
@@ -51,10 +59,7 @@ namespace VDM
 		case 0:
 			pguid = new GUID();
 			memcpy(pguid, reinterpret_cast<void*>(lParam), sizeof(GUID));
-			if (!mpVdm) {
-				// deferred initialization
-				if (!create()) return false;
-			}
+			if (!mpVdm && !create()) return false;
 			PostMessage(hwnd, msg, 1, reinterpret_cast<LPARAM>(pguid));
 			break;
 		case 1:

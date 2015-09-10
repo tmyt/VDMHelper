@@ -41,19 +41,23 @@ namespace VDM
 		return pVdm;
 	}
 
+	bool Helper::isConsoleWindowClass(HWND hwnd)
+	{
+		TCHAR szClassName[32] = { 0 };
+		GetClassName(hwnd, szClassName, 31);
+		return _tcscmp(szClassName, _T("ConsoleWindowClass")) == 0;
+	}
+
 	bool Helper::process(HWND hwnd, UINT msg, ::WPARAM wParam, ::LPARAM lParam)
 	{
 		if (msg != mMoveWindowToDesktopMessage) return false;
-		GUID* pguid = reinterpret_cast<GUID*>(lParam);
+		if (isConsoleWindowClass(hwnd)) return false; // ignore console window
 		std::lock_guard<std::mutex> lock(mVdmLock); // scoped lock
 		if (mInitializationFailed) return false;
 		if(wParam == 0) {
-			pguid = new GUID();
+			GUID* pguid = new GUID();
 			memcpy(pguid, reinterpret_cast<void*>(lParam), sizeof(GUID));
-			if (!mpVdm) {
-				// deferred initialization
-				if (!create()) return false;
-			}
+			if (!mpVdm && !create()) return false;
 			std::thread([hwnd, pguid](IVirtualDesktopManager* pVdm) {
 				pVdm->MoveWindowToDesktop(hwnd, *pguid);
 				SetForegroundWindow(hwnd);
