@@ -10,7 +10,7 @@
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
-HHOOK hHook;
+HHOOK hCWPHook, hGMHook;
 HMODULE hVdm;
 
 // Forward declarations of functions included in this code module:
@@ -22,9 +22,9 @@ bool Init();
 bool DeInit();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-					 _In_opt_ HINSTANCE hPrevInstance,
-					 _In_ LPWSTR    lpCmdLine,
-					 _In_ int       nCmdShow)
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPWSTR    lpCmdLine,
+	_In_ int       nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
@@ -33,7 +33,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	MyRegisterClass(hInstance);
 
 	// Perform application initialization:
-	if (!InitInstance (hInstance, nCmdShow))
+	if (!InitInstance(hInstance, nCmdShow))
 	{
 		return FALSE;
 	}
@@ -47,7 +47,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		DispatchMessage(&msg);
 	}
 
-	return (int) msg.wParam;
+	return (int)msg.wParam;
 }
 
 
@@ -59,13 +59,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 //
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-	WNDCLASSEXW wcex = {0};
+	WNDCLASSEXW wcex = { 0 };
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
-	wcex.lpfnWndProc    = WndProc;
-	wcex.hInstance      = hInstance;
-	wcex.lpszClassName  = WINDOW_CLASS;
+	wcex.lpfnWndProc = WndProc;
+	wcex.hInstance = hInstance;
+	wcex.lpszClassName = WINDOW_CLASS;
 
 	return RegisterClassExW(&wcex);
 }
@@ -82,17 +82,17 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // Store instance handle in our global variable
+	hInst = hInstance; // Store instance handle in our global variable
 
-   HWND hWnd = CreateWindowW(WINDOW_CLASS, nullptr, 0,
-	  CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+	HWND hWnd = CreateWindowW(WINDOW_CLASS, nullptr, 0,
+		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
-   if (!hWnd)
-   {
-	  return FALSE;
-   }
+	if (!hWnd)
+	{
+		return FALSE;
+	}
 
-   return TRUE;
+	return TRUE;
 }
 
 //
@@ -125,15 +125,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 bool Init()
 {
 	hVdm = LoadLibrary(HELPER_LIBRARY);
-	auto proc = reinterpret_cast<decltype(::VDMHookProc)*>(::GetProcAddress(hVdm, "VDMHookProc"));
-	hHook = SetWindowsHookEx(WH_CALLWNDPROCRET, proc, hVdm, 0);
+	auto proc1 = reinterpret_cast<decltype(::VDMHookProc1)*>(::GetProcAddress(hVdm, "VDMHookProc1"));
+	auto proc2 = reinterpret_cast<decltype(::VDMHookProc2)*>(::GetProcAddress(hVdm, "VDMHookProc2"));
+	hCWPHook = SetWindowsHookEx(WH_CALLWNDPROCRET, proc1, hVdm, 0);
+	hGMHook = SetWindowsHookEx(WH_GETMESSAGE, proc2, hVdm, 0);
 	PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
 	return true;
 }
 
 bool DeInit()
 {
-	UnhookWindowsHookEx(hHook);
+	UnhookWindowsHookEx(hCWPHook);
+	UnhookWindowsHookEx(hGMHook);
 	PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
 	FreeLibrary(hVdm);
 	return true;

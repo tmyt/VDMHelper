@@ -10,10 +10,11 @@
 
 namespace VDMHelperCLR
 {
-	VdmHelper::VdmHelper() : hHook(0)
+	VdmHelper::VdmHelper() : hCWPHook(0), hGMHook(0)
 	{
 		hvdm = ::LoadLibrary(_T("VDMHelper32.dll"));
-		GPA(hvdm, VDMHookProc);
+		GPA(hvdm, VDMHookProc1);
+		GPA(hvdm, VDMHookProc2);
 		GPA(hvdm, VDMAllocGuid);
 		GPA(hvdm, VDMReleaseGuid);
 		RequestMoveWindowToDesktopMessage = RegisterWindowMessage(RequestMoveWindowToDesktop);
@@ -28,17 +29,20 @@ namespace VDMHelperCLR
 	bool VdmHelper::Init()
 	{
 		if (!hvdm) throw gcnew System::InvalidOperationException("Initialization failed");
-		hHook = SetWindowsHookEx(WH_CALLWNDPROCRET, VDMHookProc, hvdm, 0);
+		hCWPHook = SetWindowsHookEx(WH_CALLWNDPROCRET, VDMHookProc1, hvdm, 0);
+		hGMHook = SetWindowsHookEx(WH_GETMESSAGE, VDMHookProc2, hvdm, 0);
 		PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
-		return hHook != 0;
+		return hCWPHook != 0;
 	}
 
 	bool VdmHelper::DeInit()
 	{
-		if (!hHook)return false;
-		UnhookWindowsHookEx(hHook);
+		if (!hCWPHook)return false;
+		UnhookWindowsHookEx(hCWPHook);
+		UnhookWindowsHookEx(hGMHook);
 		PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
-		hHook = 0;
+		hCWPHook = 0;
+		hGMHook = 0;
 		return true;
 	}
 
