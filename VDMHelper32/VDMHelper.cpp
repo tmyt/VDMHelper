@@ -24,11 +24,8 @@ namespace VDM
 	{
 		// initialize
 		CoInitialize(nullptr);
-		CComPtr<IServiceProvider> pServiceProvider;
-		auto hr = CoCreateInstance(CLSID_ImmersiveShell, nullptr, CLSCTX_LOCAL_SERVER, IID_PPV_ARGS(&pServiceProvider));
-		if (FAILED(hr)) return nullptr;
 		IVirtualDesktopManager* pVdm;
-		hr = pServiceProvider->QueryService(__uuidof(IVirtualDesktopManager), &pVdm);
+		auto hr = CoCreateInstance(CLSID_VirtualDesktopManager, nullptr, CLSCTX_INPROC, IID_PPV_ARGS(&pVdm));
 		if (FAILED(hr)) return nullptr;
 		return pVdm;
 	}

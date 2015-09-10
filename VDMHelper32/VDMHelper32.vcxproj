@@ -22,7 +22,7 @@
     <ProjectGuid>{8C6FB699-291B-4084-B095-B3F6C6C07FFF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>VDMHelper32</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -153,7 +153,6 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VDMHelper.h" />
     <ClInclude Include="VDMHelperAPI.h" />
-    <ClInclude Include="VirtualDesktops.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

@@ -1,7 +1,9 @@
 #pragma once
 
-// Refer: http://www.cyberforum.ru/blogs/105416/blog3671.html
-#include "VirtualDesktops.h"
+#define WIN32_MEAN_AND_LEAN
+
+#include <Windows.h>
+#include <ShObjIdl.h>
 
 #include "VDMHelperAPI.h"
 
