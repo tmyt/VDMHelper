@@ -24,10 +24,11 @@ namespace VDMHelperCLR {
 		UINT RequestMoveWindowToDesktopMessage;
 
 		HMODULE hvdm;
-		decltype(::VDMHookProc)* VDMHookProc;
+		decltype(::VDMHookProc1)* VDMHookProc1;
+		decltype(::VDMHookProc2)* VDMHookProc2;
 		decltype(::VDMAllocGuid)* VDMAllocGuid;
 		decltype(::VDMReleaseGuid)* VDMReleaseGuid;
 
-		HHOOK hHook;
+		HHOOK hCWPHook, hGMHook;
 	};
 }

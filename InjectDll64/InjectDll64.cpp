@@ -10,7 +10,7 @@
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
-HHOOK hHook;
+HHOOK hCWPHook, hGMHook;
 HMODULE hVdm;
 
 // Forward declarations of functions included in this code module:
@@ -125,15 +125,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 bool Init()
 {
 	hVdm = LoadLibrary(HELPER_LIBRARY);
-	auto proc = reinterpret_cast<decltype(::VDMHookProc)*>(::GetProcAddress(hVdm, "VDMHookProc"));
-	hHook = SetWindowsHookEx(WH_CALLWNDPROCRET, proc, hVdm, 0);
+	auto proc1 = reinterpret_cast<decltype(::VDMHookProc1)*>(::GetProcAddress(hVdm, "VDMHookProc1"));
+	auto proc2 = reinterpret_cast<decltype(::VDMHookProc2)*>(::GetProcAddress(hVdm, "VDMHookProc2"));
+	hCWPHook = SetWindowsHookEx(WH_CALLWNDPROCRET, proc1, hVdm, 0);
+	hGMHook = SetWindowsHookEx(WH_GETMESSAGE, proc2, hVdm, 0);
 	PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
 	return true;
 }
 
 bool DeInit()
 {
-	UnhookWindowsHookEx(hHook);
+	UnhookWindowsHookEx(hCWPHook);
+	UnhookWindowsHookEx(hGMHook);
 	PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
 	FreeLibrary(hVdm);
 	return true;

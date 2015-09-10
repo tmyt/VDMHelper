@@ -1,5 +1,6 @@
 LIBRARY
 EXPORTS
-  VDMHookProc
+  VDMHookProc1
+  VDMHookProc2
   VDMAllocGuid
   VDMReleaseGuid

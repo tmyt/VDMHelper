@@ -2,13 +2,14 @@
 #include "stdafx.h"
 
 #include "VDMHelper.h"
+#include "VDMHelperAPI.h"
 
 VDM::Helper g_helper;
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-					   DWORD  ul_reason_for_call,
-					   LPVOID lpReserved
-					 )
+BOOL APIENTRY DllMain(HMODULE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved
+	)
 {
 	switch (ul_reason_for_call)
 	{
@@ -26,12 +27,22 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 }
 
 
-LRESULT CALLBACK VDMHookProc(int nCode, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK VDMHookProc1(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	if (nCode == HC_ACTION)
 	{
 		auto cwp = reinterpret_cast<CWPRETSTRUCT*>(lParam);
 		g_helper.process(cwp->hwnd, cwp->message, cwp->wParam, cwp->lParam);
+	}
+	return CallNextHookEx(nullptr, nCode, wParam, lParam);
+}
+
+LRESULT CALLBACK VDMHookProc2(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	if (nCode == HC_ACTION && wParam == PM_REMOVE)
+	{
+		auto msg = reinterpret_cast<MSG*>(lParam);
+		g_helper.process(msg->hwnd, msg->message, msg->wParam, msg->lParam);
 	}
 	return CallNextHookEx(nullptr, nCode, wParam, lParam);
 }
