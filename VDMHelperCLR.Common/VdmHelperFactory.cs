@@ -7,7 +7,7 @@ namespace VDMHelperCLR.Common
     public static class VdmHelperFactory
     {
         private static string DllName32 = "VDMHelperCLR32.dll";
-        private static string DllName64 = "VDMHelperCLR32.dll";
+        private static string DllName64 = "VDMHelperCLR64.dll";
 
         private static string GetPlatformDllName()
         {
