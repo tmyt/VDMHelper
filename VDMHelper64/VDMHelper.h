@@ -32,4 +32,12 @@ namespace VDM
 
 		UINT mMoveWindowToDesktopMessage;
 	};
+
+#pragma pack(push, 1)
+	struct Shared
+	{
+		HWND hwnd;
+		GUID guid;
+	};
+#pragma pack(pop)
 }

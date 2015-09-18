@@ -11,6 +11,8 @@
 // Windows Header Files:
 #include <windows.h>
 #include <atlbase.h>
+#include <psapi.h>
 
+#pragma comment(lib, "psapi.lib")
 
 // TODO: reference additional headers your program requires here

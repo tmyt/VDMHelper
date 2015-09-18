@@ -17,6 +17,7 @@ namespace VDMHelperCLR
 		GPA(hvdm, VDMHookProc2);
 		GPA(hvdm, VDMAllocGuid);
 		GPA(hvdm, VDMReleaseGuid);
+		GPA(hvdm, VDMInject);
 		RequestMoveWindowToDesktopMessage = RegisterWindowMessage(RequestMoveWindowToDesktop);
 	}
 
@@ -61,7 +62,19 @@ namespace VDMHelperCLR
 		// allocate & request
 		auto hwnd = (HWND)topLevelWindow.ToPointer();
 		LPVOID rGuid = VDMAllocGuid(hwnd, &dest);
-		SendMessage(hwnd, RequestMoveWindowToDesktopMessage, 0, (LPARAM)rGuid);
+		if (isConsoleWindowClass(hwnd)) {
+			VDMInject(hwnd, &dest);
+		}
+		else {
+			SendMessage(hwnd, RequestMoveWindowToDesktopMessage, 0, (LPARAM)rGuid);
+		}
 		VDMReleaseGuid(hwnd, rGuid);
+	}
+
+	bool VdmHelper::isConsoleWindowClass(HWND hwnd)
+	{
+		TCHAR szClassName[32] = { 0 };
+		GetClassName(hwnd, szClassName, 31);
+		return _tcscmp(szClassName, _T("ConsoleWindowClass")) == 0;
 	}
 }
