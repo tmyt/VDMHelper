@@ -46,7 +46,7 @@ namespace VDMHelperCLR
 		return true;
 	}
 
-	void VdmHelper::MoveWindowToDesktop(IntPtr topLevelWindow, Guid desktopId)
+	bool VdmHelper::MoveWindowToDesktop(IntPtr topLevelWindow, Guid desktopId)
 	{
 		BOOL isRunningOnX64 = FALSE;
 		::IsWow64Process(GetCurrentProcess(), &isRunningOnX64);
@@ -69,6 +69,7 @@ namespace VDMHelperCLR
 			SendMessage(hwnd, RequestMoveWindowToDesktopMessage, 0, (LPARAM)rGuid);
 		}
 		VDMReleaseGuid(hwnd, rGuid);
+		return true;
 	}
 
 	bool VdmHelper::isConsoleWindowClass(HWND hwnd)

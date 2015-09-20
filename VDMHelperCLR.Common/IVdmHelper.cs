@@ -6,6 +6,6 @@ namespace VDMHelperCLR.Common
     {
         bool Init();
         bool DeInit();
-        void MoveWindowToDesktop(IntPtr topLevelWindow, Guid desktopId);
+        bool MoveWindowToDesktop(IntPtr topLevelWindow, Guid desktopId);
     }
 }

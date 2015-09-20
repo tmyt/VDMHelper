@@ -18,7 +18,7 @@ namespace VDMHelperCLR {
 
 		virtual bool Init();
 		virtual bool DeInit();
-		virtual void MoveWindowToDesktop(IntPtr topLevelWindow, Guid desktopId);
+		virtual bool MoveWindowToDesktop(IntPtr topLevelWindow, Guid desktopId);
 
 	private:
 		UINT RequestMoveWindowToDesktopMessage;
