@@ -30,6 +30,9 @@
     <ClInclude Include="VDMHelperAPI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\VDMHelper\RemoteModuleUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -39,6 +42,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VDMHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VDMHelper\RemoteModuleUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

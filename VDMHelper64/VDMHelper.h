@@ -34,7 +34,13 @@ namespace VDM
 	};
 
 #pragma pack(push, 1)
-	struct Shared
+	struct Shared32
+	{
+		unsigned int hwnd;
+		GUID guid;
+	};
+
+	struct Shared64
 	{
 		HWND hwnd;
 		GUID guid;

@@ -4,4 +4,5 @@ EXPORTS
   VDMHookProc2
   VDMAllocGuid
   VDMReleaseGuid
+  VDMProcess
   VDMInject

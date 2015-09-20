@@ -10,17 +10,6 @@
 
 namespace VDMHelperCLR
 {
-	bool IsWow64Process(HWND hwnd)
-	{
-		DWORD pid;
-		BOOL isWow64;
-		GetWindowThreadProcessId(hwnd, &pid);
-		auto hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
-		::IsWow64Process(hProcess, &isWow64);
-		CloseHandle(hProcess);
-		return isWow64 != 0;
-	}
-
 	VdmHelper::VdmHelper() : hCWPHook(0), hGMHook(0)
 	{
 		hvdm = ::LoadLibrary(_T("VDMHelper64.dll"));
@@ -74,7 +63,6 @@ namespace VDMHelperCLR
 		auto hwnd = (HWND)topLevelWindow.ToPointer();
 		LPVOID rGuid = VDMAllocGuid(hwnd, &dest);
 		if (isConsoleWindowClass(hwnd)) {
-			if (IsWow64Process(hwnd)) return false;
 			VDMInject(hwnd, &dest);
 		}
 		else {

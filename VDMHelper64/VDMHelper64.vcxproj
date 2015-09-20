@@ -147,12 +147,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\VDMHelper\RemoteModuleUtils.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VDMHelper.h" />
     <ClInclude Include="VDMHelperAPI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\VDMHelper\RemoteModuleUtils.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
