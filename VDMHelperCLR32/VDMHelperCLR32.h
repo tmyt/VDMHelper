@@ -28,8 +28,10 @@ namespace VDMHelperCLR {
 		decltype(::VDMHookProc2)* VDMHookProc2;
 		decltype(::VDMAllocGuid)* VDMAllocGuid;
 		decltype(::VDMReleaseGuid)* VDMReleaseGuid;
+		decltype(::VDMInject)* VDMInject;
 
-		HHOOK hCWPHook;
-		HHOOK hGMHook;
+		HHOOK hCWPHook, hGMHook;
+
+		bool isConsoleWindowClass(HWND hwnd);
 	};
 }
