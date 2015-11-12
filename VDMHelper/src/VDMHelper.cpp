@@ -48,31 +48,38 @@ namespace VDM
 		return _tcscmp(szClassName, _T("ConsoleWindowClass")) == 0;
 	}
 
+	bool Helper::perfomMoveWindow(HWND hwnd, GUID* pguid)
+	{
+		std::lock_guard<std::mutex> lock(mVdmLock); // scoped lock
+		if (!mpVdm && !create()) return false;
+		mpVdm->MoveWindowToDesktop(hwnd, *pguid);
+		SetForegroundWindow(hwnd);
+		return true;
+	}
+
 	bool Helper::process(HWND hwnd, UINT msg, ::WPARAM wParam, ::LPARAM lParam)
 	{
 		if (msg != mMoveWindowToDesktopMessage) return false;
 		if (isConsoleWindowClass(hwnd)) return false; // ignore console window
 		GUID* pguid = reinterpret_cast<GUID*>(lParam);
-		std::lock_guard<std::mutex> lock(mVdmLock); // scoped lock
 		if (mInitializationFailed) return false;
 		switch (wParam) {
 		case 0:
 			pguid = new GUID();
 			memcpy(pguid, reinterpret_cast<void*>(lParam), sizeof(GUID));
-			if (!mpVdm && !create()) return false;
 #ifdef _WIN64
-			std::thread([hwnd, pguid](IVirtualDesktopManager* pVdm) {
-				pVdm->MoveWindowToDesktop(hwnd, *pguid);
-				SetForegroundWindow(hwnd);
+			// 64 bit process can move in non UI context.
+			std::thread([hwnd, pguid, this]() {
+				perfomMoveWindow(hwnd, pguid);
 				delete pguid;
-			}, mpVdm).detach();
+			}).detach();
 			break;
 #else
+			// 32 bit process must be in UI context and non SendMessage process.
 			PostMessage(hwnd, msg, 1, reinterpret_cast<LPARAM>(pguid));
 			break;
 		case 1:
-			mpVdm->MoveWindowToDesktop(hwnd, *pguid);
-			SetForegroundWindow(hwnd);
+			perfomMoveWindow(hwnd, pguid);
 			delete pguid;
 			break;
 #endif

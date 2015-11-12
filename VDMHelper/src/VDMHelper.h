@@ -25,6 +25,7 @@ namespace VDM
 	private:
 		IVirtualDesktopManager* Helper::getVdm();
 		bool isConsoleWindowClass(HWND hwnd);
+		bool perfomMoveWindow(HWND hwnd, GUID* pguid);
 
 		std::mutex mVdmLock;
 		IVirtualDesktopManager* mpVdm;
