@@ -4,7 +4,7 @@
 
 #include "VDMHelperCLR.h"
 
-#include "../../VDMHelper/VDMHelper64/VDMHelperAPI.h"
+#include "../../VDMHelper/src/VDMHelperAPI.h"
 
 #define GPA(_Mod, _Name) _Name = (decltype(::_Name)*)::GetProcAddress(_Mod, #_Name)
 

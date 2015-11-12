@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../../VDMHelper/VDMHelper64/VDMHelperAPI.h"
+#include "../../VDMHelper/src/VDMHelperAPI.h"
 
 
 using namespace System;
