@@ -38,8 +38,11 @@ namespace VDMHelperCLR
 		hGMHook = SetWindowsHookEx(WH_GETMESSAGE, VDMHookProc2, hvdm, 0);
 		PostMessage(HWND_BROADCAST, WM_NULL, 0, 0);
 #ifdef _WIN64
-		// start 32bit helper process
-		::ShellExecute(nullptr, nullptr, _T("InjectDll32.exe"), nullptr, nullptr, 0);
+		// start 32bit helper process (if not already running)
+		auto hwnd = ::FindWindow(_T("VDM.InjectDLL32.Class"), nullptr);
+		if (!hwnd) {
+			::ShellExecute(nullptr, nullptr, _T("InjectDll32.exe"), nullptr, nullptr, 0);
+		}
 #endif
 		return hCWPHook != 0;
 	}
