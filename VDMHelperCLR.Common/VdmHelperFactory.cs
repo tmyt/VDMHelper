@@ -11,8 +11,8 @@ namespace VDMHelperCLR.Common
 
         private static string GetPlatformDllName()
         {
-            var dir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\";
-            return dir + (!Environment.Is64BitProcess ? DllName32 : DllName64);
+            var dir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            return Path.Combine(dir, (!Environment.Is64BitProcess ? DllName32 : DllName64));
         }
 
         public static IVdmHelper CreateInstance()
